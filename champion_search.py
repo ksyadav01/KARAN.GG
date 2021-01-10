@@ -1,22 +1,20 @@
 from riotwatcher import LolWatcher, ApiError
-from . import constants
 
 # app = Flask(__name__)
-api_key = constants.API_KEY
-watcher = LolWatcher(api_key)
-my_region = 'na1'
-full_team = []
-your_team = []
-latest = watcher.data_dragon.versions_for_region(my_region)['n']['champion']
-static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
-
-champ_dict = {}
-for key in static_champ_list['data']:
-    row = static_champ_list['data'][key]
-    champ_dict[row['key']] = row['id']
 
 
-def champion_search(account, champ, game_list, match_history_list):
+def champion_search(key, account, champ, game_list, match_history_list):
+    watcher = LolWatcher(key)
+    my_region = 'na1'
+    full_team = []
+    your_team = []
+    latest = watcher.data_dragon.versions_for_region(my_region)['n']['champion']
+    static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
+
+    champ_dict = {}
+    for key in static_champ_list['data']:
+        row = static_champ_list['data'][key]
+        champ_dict[row['key']] = row['id']
     stats = []
     ranked_solo = []
     ranked_flex = []
@@ -212,22 +210,6 @@ def champion_search(account, champ, game_list, match_history_list):
                 champion_stats.append("N/A")
                 champion_stats.append("N/A")
             stats.append(champion_stats)
-
-        # fig = go.Figure(data=[go.Table(
-        #     header=dict(values=header,
-        #                 line_color='darkslategray',
-        #                 fill_color='lightgray',
-        #                 align='left',
-        #                 font=dict(color='white', size=12),
-        #                 height=40),
-        #     cells=dict(
-        #         values=stats, line_color='darkslategray', fill_color='white', align='left',
-        #         font_size=12,
-        #         height=30))
-        # ])
-        #
-        # fig.update_layout(width=800, height=1000)
-        # fig.show()
         return stats
     except ApiError as err:
         if err.response.status_code == 404:

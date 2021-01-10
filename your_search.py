@@ -1,21 +1,18 @@
 from riotwatcher import LolWatcher, ApiError
 
-# app = Flask(__name__)
-api_key = constants.API_KEY
-watcher = LolWatcher(api_key)
-my_region = 'na1'
-full_team = []
-your_team = []
-latest = watcher.data_dragon.versions_for_region(my_region)['n']['champion']
-static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
 
-champ_dict = {}
-for key in static_champ_list['data']:
-    row = static_champ_list['data'][key]
-    champ_dict[row['key']] = row['id']
+def your_search(key, account, game_list):
+    watcher = LolWatcher(key)
+    my_region = 'na1'
+    full_team = []
+    your_team = []
+    latest = watcher.data_dragon.versions_for_region(my_region)['n']['champion']
+    static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
 
-
-def your_search(account, game_list):
+    champ_dict = {}
+    for key in static_champ_list['data']:
+        row = static_champ_list['data'][key]
+        champ_dict[row['key']] = row['id']
     stats = []
     ranked_solo_case = False
     ranked_flex_case = False
